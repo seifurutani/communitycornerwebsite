@@ -242,11 +242,27 @@
   }
   .card-buy svg { width: 12px; height: 12px; }
 
-  /* FEATURED BANNER */
-  .featured-banner {
+  /* FEATURED CAROUSEL (Editor's Picks) */
+  .featured-carousel-outer {
+    position: relative;
     margin: 0 3rem 3rem;
+  }
+  .featured-carousel {
+    display: flex;
+    gap: 1.5rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .featured-carousel::-webkit-scrollbar { display: none; }
+
+  .featured-banner {
+    flex: 0 0 calc(50% - 0.75rem);
+    scroll-snap-align: start;
     background: var(--navy);
-    display: grid; grid-template-columns: 1fr 1.8fr;
+    display: grid; grid-template-columns: 1fr 1.4fr;
     overflow: hidden; min-height: 260px;
     position: relative;
   }
@@ -258,10 +274,11 @@
     z-index: 1;
   }
   .featured-img {
-    background: var(--navy) url('images/shaolin-point-guard-cover.jpg') center/contain no-repeat;
+    background-color: var(--navy);
+    background-position: center; background-size: contain; background-repeat: no-repeat;
   }
   .featured-text {
-    padding: 2.5rem 2.5rem 2.5rem 1.5rem;
+    padding: 2rem 1.75rem 2rem 1.25rem;
     display: flex; flex-direction: column; justify-content: center;
     position: relative; z-index: 2;
   }
@@ -271,12 +288,13 @@
   }
   .featured-title {
     font-family: 'Playfair Display', serif;
-    font-size: 1.8rem; line-height: 1.2;
-    color: var(--paper); margin-bottom: 0.8rem;
+    font-size: 1.4rem; line-height: 1.25;
+    color: var(--paper); margin-bottom: 0.7rem;
   }
   .featured-desc {
-    font-size: 0.9rem; color: rgba(245,239,224,0.7);
-    line-height: 1.65; margin-bottom: 1.5rem;
+    font-size: 0.85rem; color: rgba(245,239,224,0.7);
+    line-height: 1.6; margin-bottom: 1.25rem;
+    display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;
   }
   .featured-link {
     display: inline-flex; align-items: center; gap: 0.5rem;
@@ -287,6 +305,27 @@
     transition: opacity 0.2s;
   }
   .featured-link:hover { opacity: 0.75; }
+
+  .carousel-arrow {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    z-index: 3; width: 42px; height: 42px; border-radius: 50%;
+    background: var(--navy); color: var(--paper); border: none;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem; cursor: pointer;
+    box-shadow: 0 4px 14px rgba(13,27,42,0.3);
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .carousel-arrow:hover { opacity: 0.85; }
+  .carousel-arrow.prev { left: -21px; }
+  .carousel-arrow.next { right: -21px; }
+  .carousel-arrow:disabled { opacity: 0.3; cursor: default; }
+
+  @media (max-width: 900px) {
+    .featured-banner { flex-basis: 100%; grid-template-columns: 1fr; }
+    .featured-carousel-outer { margin: 0 1.5rem 2.5rem; }
+    .featured-img { height: 200px; }
+    .carousel-arrow { display: none; }
+  }
 
   /* PODCAST SECTION */
   .podcast-section {
@@ -365,6 +404,52 @@
   .podcast-tag.politics { background: var(--red); }
   .podcast-tag.comedy { background: var(--gold); color: var(--navy); }
   .podcast-tag.history { background: #5a3e7a; }
+
+  /* ARTICLES SECTION */
+  .article-section {
+    padding: 0 3rem 5rem;
+  }
+  .article-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+  @media (max-width: 1100px) { .article-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 768px) { .article-grid { grid-template-columns: 1fr; } .article-section { padding: 0 1.5rem 3rem; } }
+
+  .article-card {
+    display: flex; flex-direction: column;
+    background: white;
+    text-decoration: none; color: inherit;
+    transition: transform 0.2s, box-shadow 0.2s;
+    overflow: hidden;
+  }
+  .article-card:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(13,27,42,0.12); }
+  .article-img {
+    width: 100%; height: 170px;
+    object-fit: cover;
+    background: var(--paper-dark);
+  }
+  .article-body { padding: 1.25rem; flex: 1; display: flex; flex-direction: column; }
+  .article-meta {
+    font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase;
+    font-weight: 700; color: var(--muted); margin-bottom: 0.5rem;
+  }
+  .article-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem; line-height: 1.35;
+    color: var(--navy); margin-bottom: 0.5rem;
+  }
+  .article-excerpt {
+    font-size: 0.8rem; line-height: 1.6; color: #555;
+    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+    margin-bottom: 0.9rem; flex: 1;
+  }
+  .article-read {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--red);
+    display: flex; align-items: center; gap: 0.3rem;
+  }
 
   /* NEWSLETTER SECTION */
   .newsletter-section {
@@ -518,8 +603,6 @@
 
   @media (max-width: 768px) {
     footer { grid-template-columns: 1fr; gap: 2rem; padding: 2rem 1.5rem; }
-    .featured-banner { margin: 0 1.5rem 2rem; grid-template-columns: 1fr; }
-    .featured-img { height: 180px; }
   }
 </style>
 </head>
@@ -533,6 +616,7 @@
     <li><a href="#videos">Videos</a></li>
     <li><a href="#merch">Merch</a></li>
     <li><a href="#podcasts">Podcasts</a></li>
+    <li><a href="#articles">Articles</a></li>
     <li><a href="#newsletter">Newsletter</a></li>
     <li><a href="#about">About</a></li>
   </ul>
@@ -560,18 +644,38 @@
 </section>
 
 <!-- FEATURED -->
-<div class="stamp-divider"><div class="stamp">Editor's Pick</div></div>
+<div class="stamp-divider"><div class="stamp">Editor's Picks</div></div>
 
-<div class="featured-banner">
-  <div class="featured-img"></div>
-  <div class="featured-text">
-    <p class="featured-eyebrow">★ Featured This Month</p>
-    <h2 class="featured-title">Shaolin Point Guard: A Coming-of-Age Story About Hoops, Heritage, and Finding Your Place</h2>
-    <p class="featured-desc">By Warren T. Furutani. A coming-of-age story that follows a young player on and off the court, weaving basketball with questions of heritage, identity, and finding your place in the world.</p>
-    <a href="https://www.amazon.com/Shaolin-Point-Guard-Coming-Age/dp/B0H57KVSKZ/" target="_blank" rel="noopener" class="featured-link">
-      Shop on Amazon →
-    </a>
+<div class="featured-carousel-outer">
+  <button class="carousel-arrow prev" id="featured-prev" aria-label="Previous picks">‹</button>
+  <div class="featured-carousel" id="featured-carousel">
+
+    <div class="featured-banner">
+      <div class="featured-img" style="background-image:url('images/shaolin-point-guard-cover.jpg');"></div>
+      <div class="featured-text">
+        <p class="featured-eyebrow">★ Featured This Month</p>
+        <h2 class="featured-title">Shaolin Point Guard: A Coming-of-Age Story About Hoops, Heritage, and Finding Your Place</h2>
+        <p class="featured-desc">By Warren T. Furutani. A coming-of-age story that follows a young player on and off the court, weaving basketball with questions of heritage, identity, and finding your place in the world.</p>
+        <a href="https://www.amazon.com/Shaolin-Point-Guard-Coming-Age/dp/B0H57KVSKZ/" target="_blank" rel="noopener" class="featured-link">
+          Shop on Amazon →
+        </a>
+      </div>
+    </div>
+
+    <div class="featured-banner">
+      <div class="featured-img" style="background-image:url('images/da-blue-book-cover.jpg');"></div>
+      <div class="featured-text">
+        <p class="featured-eyebrow">★ Editor's Pick</p>
+        <h2 class="featured-title">da Blue Book: Political Concepts and Proverbs, For Political Activists and Community Organizers</h2>
+        <p class="featured-desc">By Warren T. Furutani. A compact collection of organizing principles, proverbs, and hard-earned lessons from a lifetime in community activism, coalition building, and public service.</p>
+        <a href="https://www.amazon.com/Blue-Book-Political-Activists-Organizers/dp/B0HFLQFFLR/" target="_blank" rel="noopener" class="featured-link">
+          Shop on Amazon →
+        </a>
+      </div>
+    </div>
+
   </div>
+  <button class="carousel-arrow next" id="featured-next" aria-label="Next picks">›</button>
 </div>
 
 <!-- FILTER + GRID -->
@@ -867,6 +971,46 @@
   </div>
 </div>
 
+<!-- ARTICLES SECTION -->
+<div id="articles">
+  <div class="stamp-divider"><div class="stamp">✍️ Articles</div></div>
+  <div class="article-section">
+    <div class="article-grid">
+
+      <a class="article-card" href="#">
+        <img class="article-img" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=500&q=80" alt="Essay on representation in publishing">
+        <div class="article-body">
+          <p class="article-meta">Essay · Publishing</p>
+          <h3 class="article-title">Why Asian American Stories Are Finally Getting Their Due — And Why It's Not Enough</h3>
+          <p class="article-excerpt">A look at the recent wave of bestsellers and blockbusters centering Asian American voices, and the work still left to widen who gets to tell these stories.</p>
+          <span class="article-read">Read Article <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </div>
+      </a>
+
+      <a class="article-card" href="#">
+        <img class="article-img" src="https://images.unsplash.com/photo-1512820790803-83ca734da794?w=500&q=80" alt="Interview with an author">
+        <div class="article-body">
+          <p class="article-meta">Interview · Craft</p>
+          <h3 class="article-title">Behind the Page: A Conversation on Writing Coming-of-Age Stories</h3>
+          <p class="article-excerpt">We sat down with an emerging author to talk about blending personal history, sport, and tradition into a debut coming-of-age novel.</p>
+          <span class="article-read">Read Article <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </div>
+      </a>
+
+      <a class="article-card" href="#">
+        <img class="article-img" src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=500&q=80" alt="Essay on identity and community">
+        <div class="article-body">
+          <p class="article-meta">Personal Essay · Identity</p>
+          <h3 class="article-title">Finding Home in Two Languages</h3>
+          <p class="article-excerpt">On growing up code-switching between family and the world outside — and learning, later in life, that both languages belonged to the same story.</p>
+          <span class="article-read">Read Article <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</div>
+
 <!-- NEWSLETTER SECTION -->
 <div id="newsletter">
   <div class="newsletter-section">
@@ -997,6 +1141,29 @@
   }
 
   initHeroRotation();
+
+  (function initFeaturedCarousel() {
+    const track = document.getElementById('featured-carousel');
+    const prevBtn = document.getElementById('featured-prev');
+    const nextBtn = document.getElementById('featured-next');
+    if (!track || !prevBtn || !nextBtn) return;
+
+    function updateArrows() {
+      const maxScroll = track.scrollWidth - track.clientWidth - 4;
+      prevBtn.disabled = track.scrollLeft <= 4;
+      nextBtn.disabled = track.scrollLeft >= maxScroll;
+    }
+
+    prevBtn.addEventListener('click', () => {
+      track.scrollBy({ left: -track.clientWidth, behavior: 'smooth' });
+    });
+    nextBtn.addEventListener('click', () => {
+      track.scrollBy({ left: track.clientWidth, behavior: 'smooth' });
+    });
+    track.addEventListener('scroll', updateArrows);
+    window.addEventListener('resize', updateArrows);
+    updateArrows();
+  })();
 
   document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.addEventListener('click', function() {
